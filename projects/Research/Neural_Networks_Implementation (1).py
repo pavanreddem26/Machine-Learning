@@ -579,43 +579,8 @@ def update_ji_multi_3(V,LR,netj,data_point,sum_ji_update,m,activation_function_1
     return(V_updated)
 
 
-# <h2> TESTING
-
-# In[ ]:
 
 
-def test_model(W,V,y,training_data):
-    output_layer=1                                                          #Because this is a Regression
-    input_layer=input_layer_nodes(training_data,"NO")  
-                                                    #Calculating the Total Number of Input Nodes
-    #Need to initialize the hidden_layer_nodes_Function
-    hidden_layer= 2 
-    error=0
-    err=0;
-    
-    for i in range(len(training_data)):
-        ###I need to Initialize the Learning rate (Adaptive Learning rate)
-
-        netj=[0 for m in range(hidden_layer)] ##Each node in the hidden layer has particulat net
-        for j in range(hidden_layer):
-            netj[j]=net_j(training_data.iloc[i],V,j,input_layer) 
-       #calculating the values of hj
-        hj=[0 for n in range(hidden_layer)]
-        for j in range(hidden_layer):
-            hj[j]=values_hj(relu_output, netj[j])
-       #Now calculating the values of net k
-        netk=[0 for i in range(output_layer)]
-        for k in range(output_layer):
-            netk=net_k(hj,W,hidden_layer,k)
-       # This is the predicted Value
-        predicted = netk
-       #Till Now we calculated all the Values Now Find the error and back propagate
-        err = (y[i]-predicted) #true label-Predicted value
-        error=error+(err*err)
-        print("Round",i)
-        print("Error:",error)
-    print("\n")
-    print("Mean Squared Error:",(error/(len(training_data))))
 
 
 # <h2> 3--Layer Neural Network for Regression:
@@ -1416,76 +1381,4 @@ lin_reg.intercept_, lin_reg.coef_
 train_predictions=lin_reg.predict(training_data)
 print("\n The MSE Error for testing is:",mean_squared_error(y,train_predictions))
 
-
-# In[ ]:
-
-
-#----------------------------------------------------------------------
-def regression_layer_3_2(layers):
-    output_layer=1                                                          
-    input_layer=input_layer_nodes(training_data,"NO")  
-     
-    hidden_layer=int(input("Enter the number of nodes you want to insert in the Hidden Layer"))
-    print("\n")
-    hidden_activation=select_activation(layers)
-    output_active=hidden_activation[0]
-    diff_active=hidden_activation[1]
-    #Instead Of Using the one fixed weights i am changing the weights and choosing the one that has minimum error
-
-    V= [[0 for x in range(input_layer)] for y in range(hidden_layer)]  #Initialize the weights from input layer to the hidden layer
-    for j in range(hidden_layer):
-        for m in range(input_layer):
-            V[j][m]=np.random.uniform(-0.001,0.001)
-                                      
-    W=[[0 for x in range(hidden_layer)] for y in range(output_layer)] #Intialize the weights from Hidden Layer to the output layer
-    for k in range(output_layer):
-        for j in range(hidden_layer):
-            W[k][j]=np.random.uniform(-0.001,0.001) 
-    for number in range(100):
-        print('\n')
-        print("Number:",number)
-        print("\n")
-        error=0 #Initialize error to be zero
-        err=0
-        for i in range(total_length):
-            netj=[0 for m in range(hidden_layer)] ##Each node in the hidden layer has particulat net
-            for j in range(hidden_layer):
-                netj[j]=net_j(training_data.iloc[i],V,j,input_layer)
-                        
-            
-            hj=[0 for n in range(hidden_layer)]
-            for j in range(hidden_layer):
-                hj[j]=values_hj(output_active, netj[j])
-            
-            netk=[0 for i in range(output_layer)]
-            for k in range(output_layer):
-                netk[k]=net_k(hj,W,k,hidden_layer)
-                
-            for k in range(output_layer):
-                predicted = netk[k]
-           
-            err =err+(y[i]-predicted)
-            error=error+((y[i]-predicted)*(y[i]-predicted))
-            
-            print("Total Error:",error)
-   
-            LR=0.001
-
-        
-            for k in range(output_layer):
-                for j in range(hidden_layer):
-                    W[k][j]=update_kj_reg(W[k][j],err,hj[j],LR)
-  
-            for j in range(hidden_layer):
-                for m in range(input_layer):
-                    for k in range(output_layer):
-                        V[j][m]=update_ji_reg(V[j][m],err,training_data.iloc[i],LR,netj[j],W[k][j],m,diff_active)
-   
-
-
-    print("The Weights Wkj",W)
-    print("The Weights Vji",V)
-    print("\n")
-    print("Testing the model_now")
-    #test_model(W,V,y,training_data)
 
