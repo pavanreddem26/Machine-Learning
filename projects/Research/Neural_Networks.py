@@ -650,7 +650,7 @@ def regression_layer_3(layers):
                 
                     for k in range(output_layer):
                         predicted = netk[k]
-                        err =err+(y[i]-predicted)
+                        err =(y[i]-predicted)
                         error=error+((y[i]-predicted)*(y[i]-predicted))
             
                 
@@ -766,7 +766,7 @@ def regression_layer_4(layers):
                         
                     for k in range(output_layer):
                         predicted = netk[k]
-                        err =err+(y[i]-predicted)
+                        err =(y[i]-predicted)
                         error=error+((y[i]-predicted)*(y[i]-predicted))
             
             
@@ -871,7 +871,7 @@ def classification_binary_3_sq(layers):
                 
                     for k in range(output_layer):
                         predicted = sigmoid_output(netk[0])
-                        err =err+(y[i]-predicted)
+                        err =(y[i]-predicted)
                         error=error+((y[i]-predicted)*(y[i]-predicted))
 
             
@@ -992,7 +992,7 @@ def classification_binary_4_sq(layers):
                             
                     for k in range(output_layer):
                         predicted = sigmoid_activation_diff(netk[k])
-                        err =err+(y[i]-predicted)
+                        err =(y[i]-predicted)
                         error=error+((y[i]-predicted)*(y[i]-predicted))
                                 
             
@@ -1103,7 +1103,7 @@ def classification_binary_3_ce(layers):
                         
                     for k in range(output_layer):
                         predicted = sigmoid_output(netk[0])
-                        p=p*(((predicted)**(y[i]))*((1-predicted)**y[i]))
+                        p=(((predicted)**(y[i]))*((1-predicted)**y[i]))
                             
         
  
@@ -1224,7 +1224,7 @@ def classification_binary_4_ce(layers):
                 
                     for k in range(output_layer):
                         predicted = sigmoid_output(netk[k])
-                        p=p*(((predicted)**(y[i]))*((1-predicted)**y[i]))
+                        p=(((predicted)**(y[i]))*((1-predicted)**y[i]))
         
 
                     err = err+(-1)*(math.log(p,10)) 
@@ -1260,287 +1260,6 @@ def classification_binary_4_ce(layers):
         print("The Weights Vbi",V_q)
         print("\n")
 
-
-# <h2>Multi-Class 3 layer Neural Network using Soft Max and Cross Entropy
-# 
-
-# In[ ]:
-
-
-def classification_multi_class_3(layers):
-    output_layer=int(input("Enter the number of classes that you are predicting"))#number of classes==number of layers
-    input_layer=input_layer_nodes(training_data,"NO") 
-    hidden_layer=int(input("Enter the number of nodes you wnat to insert in the Hidden Layer"))
-    
-    print("\n")
-    hidden_activation=select_activation(layers)
-    output_active=hidden_activation[0]
-    diff_active=hidden_activation[1]
-
-    #  For one Hot Encoding
-    si=[0 for i in range(output_layer)]
-    for s in range(output_layer):
-        print("Class:",s)
-        si[s]=int(input("Enter the type of prediction of class :"))
-    #Error 
-    err_q=[[0 for i in range(5)]for i in range(5)]
-    W_q=[[0 for i in range(5)]for i in range(5)]
-    V_q=[[0 for i in range(5)]for i in range(5)]
-    LR=[0 for i in range(5)]
-    
-    for q in range(5):
-        
-
-        #This is for setting 5 learning rates for each and every weights performed
-        for l in range(5):
-            
-            
-            print("\n")
-            print("Round:",q)
-            print("\n")
-            V= [[0 for x in range(input_layer)] for y in range(hidden_layer)]  #Initialize the weights from input layer to the hidden layer
-            for j in range(hidden_layer):
-                for m in range(input_layer):
-                    V[j][m]=np.random.uniform((-1)*(1/(10**(q+1))),1/((10)**(q+1)))
-                    
-            W=[[0 for x in range(hidden_layer)] for y in range(output_layer)] #Intialize the weights from Hidden Layer to the output layer
-            for k in range(output_layer):
-                for j in range(hidden_layer):
-                    W[k][j]=np.random.uniform((-1)*(1/(10**(q+1))),1/((10)**(q+1)))
-                    
-            LR[l]=(1/(20**(l+1)))
-            print("\n")
-            print("Round of LR",(l+1))
-            print(LR[l])
-            print("\n")
-            
-            for number in range(1000):
-                
-                print('\n')
-                print("Number:",number)
-                print("\n")
-                err=0    
-                error=0
-                
-                for i in range(total_length):   
-                    
-                    netj=[0 for m in range(hidden_layer)]
-                    for j in range(hidden_layer):
-                        netj[j]=net_j(training_data.iloc[i],V,j,input_layer) 
-            
-                    hj=[0 for n in range(hidden_layer)]
-                    for j in range(hidden_layer):
-                        hj[j]=values_hj(output_active, netj[j])
-                    netk=[0 for i in range(output_layer)]
-                    for k in range(output_layer):
-                        netk[k]=net_k_multi_class(hj,W,hidden_layer,k)
-           
-                    predicted=[0 for i in range(output_layer)]
-                    error=[0 for i in range(output_layer)]
-                    #use one hot Encoding to conert those values into Multi-Class which is suitable for ML algo
-                    ##In the dataset how we are cconsidering those values i.e red is predicted as 1
-            
-                
-                    #One Hot Encoding
-                    yk=[0 for i in range(output_layer)]
-                    for m in range(output_layer):
-                        if(si[m]==y[i]):
-                            for q in range(output_layer):
-                                if(q==m):
-                                    yk[q]=1
-                                else:
-                                    yk[q]=0;
-                    
-                
-                    for k in range(output_layer):
-                        predicted[k]=soft_max(netk,output_layer,k)
-                        error[k]=(yk[k]-predicted[k])###Need to Change Error Function
-                        print(error[k])
-                    #Total Error
-
-                    for k in range(output_layer):
-                        err=err+error[k]
-        
-                print("Error:",err)
-   
-        
-                #Till now we net values and calculated the error
-                #Now we need to updated the values in sucha a way that maximizes the likelihood
-                #Update Wkj
-                for k in range(output_layer):
-                    for j in range(hidden_layer):
-                        W[k][j]=update_kj_multi_3(W[k][j],error[k],LR[l],hj[j])
-                #Update Vji
-                sum_ji_update=0
-                for j in range(hidden_layer):
-                    for m in range(input_layer):
-                        for k in range(output_layer):
-                            sum_ji_update=(sum_ji_update)+((y[k]-predicted[k])*W[k][j])
-                    V[j][m]=update_ji_multi_3(V[j][m],LR[l],netj[j],training_data.iloc[i],sum_ji_update,m,diff_active)
-        
-    #Toatl Weights of Wkj
-        err_q[q][l]=error
-        W_q[q][l]=W
-        V_q[q][l]=V
-        print("Error:",err_q[q][l])
-        print("The Weights Wkj",W_q[q][l])
-        print("The Weights Vji",V_q[q][l])
-        print("\n")
-        print("Testing the model_now")
-    
-
-
-# <h2> 4-Layer Neural network using Softmax and Cross Entropy Error For Multi-Class
-
-# In[173]:
-
-
-def classification_multi_class_4(layers):
-    output_layer=int(input("Enter the number of classes that you are predicting"))#number of classes==number of layers
-    input_layer=input_layer_nodes(training_data,"NO") 
-    hidden_layer=hidden_layer_4()
-    hidden_layer_1=hidden_layer[0]
-    hidden_layer_2=hidden_layer[1]       
-    print("\n")
-    hidden_activation=select_activation(layers)
-    output_active_1=hidden_activation[0]
-    output_active_2=hidden_activation[1]
-    diff_active_1=hidden_activation[2]
-    diff_active_2=hidden_activation[3]
-
-    
-    
-    err_q=[[0 for i in range(5)]for i in range(5)]
-    P_q=[[0 for i in range(5)]for i in range(5)]
-    W_q=[[0 for i in range(5)]for i in range(5)]
-    V_q=[[0 for i in range(5)]for i in range(5)]
-    LR=[0 for i in range(5)]
-    
-    
-    for q in range(5):
-        
-
-            
-                 
-        for l in range(5):
-            
-            print("\n")
-            print("Round:",q)
-            print("\n")
-            
-            V= [[0 for x in range(input_layer)] for y in range(hidden_layer_1)]
-            for b in range(hidden_layer_1):
-                for m in range(input_layer):
-                    V[b][m]=np.random.uniform((-1)*(1/(10**(q+1))),1/((10)**(q+1)))
-        
-            W=[[0 for x in range(hidden_layer_1)] for y in range(hidden_layer_2)] 
-            for j in range(hidden_layer_2):
-                for b in range(hidden_layer_1):
-                    W[j][b]=np.random.uniform((-1)*(1/(10**(q+1))),1/((10)**(q+1)))
-                
-            P=[[0 for x in range(hidden_layer_2)]for y in range(output_layer)]
-            for k in range(output_layer):
-                for j in range(hidden_layer_2):
-                    P[k][j]=np.random.uniform((-1)*(1/(10**(q+1))),1/((10)**(q+1)))
-                    
-                    
-            LR[l]=(1/(10**(l+1)))
-            print("\n")
-            print("Round of LR",(l+1))
-            print(LR[l])
-            print("\n")
-            
-                
-            for number in range(10000):
-                
-                
-                print('\n')
-                print("Number:",number)
-                print("\n")
-                error=0 
-                err=0
-                
-                for i in range(total_length):
-                    
-                    
-                    netb=[0 for m in range(hidden_layer_1)]
-                    #calculating the values to netb=sum(vbi*xi)
-                    for b in range(hidden_layer_1):
-                        netb[b]=net_b_4(training_data.iloc[i],V,b,input_layer) 
-                    #calculating the values of lc
-                    lc=[0 for n in range(hidden_layer_1)]
-                    for c in range(hidden_layer_1):
-                        lc[c]=values_lc_4(output_active_1,netb[c])
-                    #calculating the netj
-                     #Initializing the netj
-                    netj=[0 for i in range(hidden_layer_2)]
-                    #Calculating all the values of netj
-                   # We are using the same function as we used for Regression of 3 layers because the function looks 
-                   #that is changing is the values that we pass into them
-                    for j in range(hidden_layer_2):
-                        netj[j]=net_j(lc,W,j,hidden_layer_1)
-                    #After calculating the net
-                    hj=[0 for n in range(hidden_layer_2)]
-                    for j in range(hidden_layer_2):
-                        hj[j]=values_hj(output_active_2,netj[j])
-                    ##Now finally netK sice this is a multi-class we will have many outputs at the output
-                    netk=[0 for i in range(output_layer)]
-                    for k in range(output_layer):
-                        netk[k]=net_k_multi_class(hj,P,hidden_layer_2,k)
-                    predicted=[0 for i in range(output_layer)]
-                    error=[0 for i in range(output_layer)]
-                     #One Hot Encoding
-                    yk=[0 for i in range(output_layer)]
-                    for m in range(output_layer):
-                        if(si[m]==y[i]):
-                            for q in range(output_layer):
-                                if(q==m):
-                                    yk[q]=1
-                                else:
-                                    yk[q]=0;
-                    for k in range(output_layer):
-                        predicted[k]=soft_max(netk,output_layer,k)
-                        error[k]=(yk[k]-predicted[k])
-                    #Total Error
-                    for k in range(output_layer):
-                        err=err+error[k]
-         
-    
-                ##Now we need to update the values based on the above Error
-                ##First we need to update the top most most layer and send it back i.e Back Propagation
-                #updating Pkj
-                for k in range(output_layer):
-                    for j in range(hidden_layer_2):
-                        P[k][j]=update_kj_multi_3(P[k][j],error[k],LR,hj[j])
-
-                sum_jb_update=0
-                for j in range(hidden_layer_2):
-                    for b in range(hidden_layer_1):
-                        for k in range(output_layer):
-                            sum_jb_update=(sum_jb_update)+((error[k])*P[k][j])
-                        
-                        W[j][b]=update_jb_multi_4(W[j][b],LR,netj[j],lc,sum_jb_update,b,diff_active_2)
-       
-    
-                sum_bi_update=0;
-                for b in range(hidden_layer_2):
-                    for i in range(input_layer):
-                        for k in range(output_layer):
-                            for j in range(hidden_layer_2):
-                                sum_bi_update=sum_bi_update+((error[k]*P[k][j]*diff_active_2(netj[j])*W[j][b]*diff_active_1(netb[b])))
-                 
-                        V[b][i]= update_bi_multi_4(V[b][i],LR,sum_bi_update,training_data.iloc[i],i)        
-            
-                                    
-        err_q[q][l]=error
-        P_q[q][l]=P
-        W_q[q][l]=W
-        V_q[q][l]=V
-        print("Error:",err_q)
-        print("The Weights Pkj",P_q)
-        print("The Weights Wjb",W_q)
-        print("The Weights Vbi",V_q)
-        print("\n")
 
 
 # <h3> Regression Main Function:
