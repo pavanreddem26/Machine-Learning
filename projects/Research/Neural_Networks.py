@@ -575,43 +575,6 @@ def update_ji_multi_3(V,LR,netj,data_point,sum_ji_update,m,activation_function_1
     return(V_updated)
 
 
-# <h2> TESTING
-
-# In[166]:
-
-
-def test_model(W,V,y,training_data):
-    output_layer=1                                                          #Because this is a Regression
-    input_layer=input_layer_nodes(training_data,"NO")  
-                                                    #Calculating the Total Number of Input Nodes
-    #Need to initialize the hidden_layer_nodes_Function
-    hidden_layer= 2 
-    error=0
-    err=0;
-    
-    for i in range(len(training_data)):
-        ###I need to Initialize the Learning rate (Adaptive Learning rate)
-
-        netj=[0 for m in range(hidden_layer)] ##Each node in the hidden layer has particulat net
-        for j in range(hidden_layer):
-            netj[j]=net_j(training_data.iloc[i],V,j,input_layer) 
-       #calculating the values of hj
-        hj=[0 for n in range(hidden_layer)]
-        for j in range(hidden_layer):
-            hj[j]=values_hj(relu_output, netj[j])
-       #Now calculating the values of net k
-        netk=[0 for i in range(output_layer)]
-        for k in range(output_layer):
-            netk=net_k(hj,W,hidden_layer,k)
-       # This is the predicted Value
-        predicted = netk
-       #Till Now we calculated all the Values Now Find the error and back propagate
-        err = (y[i]-predicted) #true label-Predicted value
-        error=error+(err*err)
-        print("Round",i)
-        print("Error:",error)
-    print("\n")
-    print("Mean Squared Error:",(error/(len(training_data))))
 
 
 # <h2> 3--Layer Neural Network for Regression:
