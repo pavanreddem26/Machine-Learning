@@ -10,7 +10,6 @@
 import numpy as np
 import pandas as pd
 import os
-from matplotlib import pyplot as plt
 
 
 #checking the path directory
@@ -59,6 +58,7 @@ w_new
 ##since in perceptrons we dont have any closed from we can solve them only by using Iteration Methods
 
 n=int(input("Enter the Number of Iterations you want to perform\n"))
+LR=0.00005
 
 for i in range(n):
     
@@ -76,7 +76,7 @@ for i in range(n):
             
             for k in range(total_number_weights):
                 
-                w_new[k]=w_new[k]+(0.00005*(perceptron.iloc[j][k]))
+                w_new[k]=w_new[k]+(LR*(perceptron.iloc[j][k]))
            
      
     print("Iteration:",i)
