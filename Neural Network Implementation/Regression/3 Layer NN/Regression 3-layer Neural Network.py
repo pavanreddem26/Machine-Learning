@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# <h1>3 -Layer Neural Network for Linear Regression
-
-# In[1]:
-
 
 import math
 import numpy as np
@@ -13,19 +6,12 @@ import os
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
-
-# In[2]:
-
-
 ##Relu Output---
 def relu_output(value):
     if(value>=0):
         return(value)
     else:
         return(0)
-
-
-# In[3]:
 
 
 def sigmoid_output(value):
@@ -38,18 +24,11 @@ def sigmoid_output(value):
         return(1/a)
 
 
-# In[4]:
-
-
 def relu_diff(value):
     if(value>=0):
         return(1)
     else:
         return(0)
-
-
-# In[5]:
-
 
 def sigmoid_diff(value):
     if(value>=(-709)):
@@ -63,16 +42,10 @@ def sigmoid_diff(value):
         return(b/(a*a))
 
 
-# In[6]:
-
-
 ##Change the Path Directory when ever you want--
 path=r"C:\Users\Pavan\Desktop\NN testing\regression"
 os.chdir(path)
 print("Path Diectory:",os.getcwd())
-
-
-# In[7]:
 
 
 # Steps to follow about the data--
@@ -85,23 +58,14 @@ training_data=pd.read_csv("housing_train.txt", sep="\s+", header=None,names=col_
 training_data  # This gives the total number of the Rows in the Data Set 
 
 
-# In[8]:
-
-
 #Separating the label from training data
 y=training_data["MEDV"]
 y
 
 
-# In[9]:
-
-
 #Deleting the label from the training Data
 del training_data["MEDV"]
 training_data
-
-
-# In[10]:
 
 
 #Assuming that the data is completely clean --
@@ -110,14 +74,8 @@ total_length=len(training_data)
 total_length
 
 
-# In[11]:
-
-
 total_columns=len(training_data.columns)
 total_columns
-
-
-# In[12]:
 
 
 def input_layer_nodes(training_data,Dimension_reduction):
@@ -131,9 +89,6 @@ def input_layer_nodes(training_data,Dimension_reduction):
             return(input_nodes) #Make sure to remove the Label(Y) from the training data
                                 #If you don't want to remove the label(Y) then consider input_nodes-1
     
-
-
-# In[13]:
 
 
 def select_activation(layers):
@@ -155,9 +110,6 @@ def select_activation(layers):
         main_function()
 
 
-# In[14]:
-
-
 def activ_function(activation_function):
     
     if(activation_function=='relu'):
@@ -174,9 +126,6 @@ def activ_function(activation_function):
         print("You entered the wrong option")
         print('**Please Start Again**')
         main_function()
-
-
-# In[15]:
 
 
 def diff_activation(activation_function):
@@ -197,9 +146,6 @@ def diff_activation(activation_function):
         main_function()
 
 
-# In[16]:
-
-
 def net_j(data_point,V,j,input_layer):
     
     sum_j=0
@@ -209,15 +155,9 @@ def net_j(data_point,V,j,input_layer):
     
 
 
-# In[17]:
-
-
 def values_hj(output_active,netj):
     
     return(output_active(netj))
-
-
-# In[18]:
 
 
 def net_k(hj,W,k,hidden_layer):
@@ -228,25 +168,16 @@ def net_k(hj,W,k,hidden_layer):
     return(sum_k)
 
 
-# In[19]:
-
-
 def update_kj_reg(W,err,hj,LR):
     
     new_updated=W+(LR*(err)*hj)
     return(new_updated)
 
 
-# In[20]:
-
-
 def update_ji_reg(V,err,data_point,LR,netj,W,m,diff_active):
     
     ji_updated=(V)+(LR*err*W*diff_active(netj)*data_point[m])
     return(ji_updated)
-
-
-# In[33]:
 
 
 #Regression using Batch Gradient descent
@@ -365,12 +296,7 @@ def regression_layer_3_batch(layers):
         print("The Weights Wkj",W)
         print("\n")
         print("The Weights Vji",V)
-        print("\n")
   
-
-
-# In[39]:
-
 
 #Regression using Stochastic Gradient descent
 def regression_layer_3_stochastic(layers):
@@ -488,10 +414,6 @@ def regression_layer_3_stochastic(layers):
         
         print("\n")
   
-
-
-# In[40]:
-
 
 #Mini Batch Gradient descent
 #The main disadvanatge of the Batch Gradient descent is that we may get struck in the local minima(saddle point)
@@ -631,10 +553,6 @@ def regression_layer_3_minibatch(layers):
         print("\n")
   
 
-
-# In[41]:
-
-
 ##This is the main Regression Function
 def regression_main(Number_of_Layers):
     print("\n The loss for the regression is Root mean Squared Loss\n")
@@ -659,10 +577,6 @@ def regression_main(Number_of_Layers):
         
         
 
-
-# In[42]:
-
-
 def main_function():
     print("Purpose is Regression \n")
     print("As of now the Number of Layers in neural Network is 3\n")
@@ -677,19 +591,8 @@ def main_function():
         main_function()
 
 
-# In[46]:
-
-
 main_function()
 
-
-# In[44]:
-
-
-#This is by using the Scikit_learn Library
-
-
-# In[ ]:
 
 
 #Using scikit learn library
@@ -698,14 +601,9 @@ lin_reg.fit(training_data, y)# Finding the parameters
 lin_reg.intercept_, lin_reg.coef_
 
 
-# In[ ]:
-
-
 train_predictions=lin_reg.predict(training_data)
 print("\n The MSE Error for testing is:",mean_squared_error(y,train_predictions))
 
-
-# In[ ]:
 
 
 
